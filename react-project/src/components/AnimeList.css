@@ -77,7 +77,7 @@ body {
   color: rgb(195, 145, 188);
 }
 
-.movie-list {
+.anime-list {
   width: 100%;
   max-width: 1000px;
   display: grid;
@@ -85,6 +85,28 @@ body {
   gap: 20px;
   list-style: none;
   padding: 0;
+}
+
+.genre-filter {
+  padding: 8px 35px 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: #333;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.genre-filter:hover {
+  border-color: #f18cdf;
+  box-shadow: 0 0 4px rgba(241, 140, 223, 0.4);
+}
+
+.genre-filter:focus {
+  outline: none;
+  border-color: #d969c5;
+  box-shadow: 0 0 6px rgba(217, 105, 197, 0.4);
 }
 
 
