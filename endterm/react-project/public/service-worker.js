@@ -60,7 +60,7 @@ self.addEventListener("fetch", (event) => {
     }
 
     if (url.origin === 'https://api.jikan.moe/v4') {
-        if (req.destination === "image") return; // let browser handle it normally
+        if (req.destination === "image") return; 
 
         event.respondWith(networkFirst(req));
         return;
@@ -77,7 +77,7 @@ async function cacheFirst(req) {
   try {
     return await fetch(req);
   } catch (err) {
-    // если это CSS или JS — можно вернуть пустой Response
+    
     if (req.destination === "style") {
       return new Response("/* offline */", { headers: { "Content-Type": "text/css" } });
     }

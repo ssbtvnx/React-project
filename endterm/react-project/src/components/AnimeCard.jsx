@@ -18,10 +18,8 @@ function AnimeCard({ anime, onFavoriteToggle, isFavorite }) {
       <button onClick={goToDetails}>Details</button>
 
       {onFavoriteToggle && (
-        <button
-          onClick={() => onFavoriteToggle(anime)}
-        >
-          {isFavorite ? "Remove" : "🤍 Add"}
+        <button onClick={onFavoriteToggle}>
+          {isFavorite ? "❤️ Remove" : "🤍 Add"}
         </button>
       )}
     </li>

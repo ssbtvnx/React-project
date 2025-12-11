@@ -5,16 +5,18 @@ import { getStorage } from "firebase/storage";
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBMbxycEiphOwg_WXAcwRqf8B6SZAQZsJ0",
-  authDomain: "react-app-74453.firebaseapp.com",
-  projectId: "react-app-74453",
-  storageBucket: "react-app-74453.firebasestorage.app",
-  messagingSenderId: "5687767642",
-  appId: "1:5687767642:web:0607b738e02e15f30c1e63"
+  apiKey: "AIzaSyDpgGG0u46fpeIqFf0DgZDcflkowhIraQk",
+  authDomain: "react-endterm-d954b.firebaseapp.com",
+  projectId: "react-endterm-d954b",
+  storageBucket: "react-endterm-d954b.firebasestorage.app",
+  messagingSenderId: "731952187934",
+  appId: "1:731952187934:web:8f68eb7a820c6ddcc5fc0f",
+  measurementId: "G-4YM8CQ87QQ"
 };
+
 
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
-export const db = getFirestore(app);
+export const firestore = getFirestore(app);
 export const storage = getStorage(app);

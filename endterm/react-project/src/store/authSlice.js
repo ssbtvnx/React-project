@@ -1,32 +1,39 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { login, signup, logout } from "../services/authService";
 
+const serializeUser = (firebaseUser) => {
+  if (!firebaseUser) return null;
+  return {
+    uid: firebaseUser.uid,
+    email: firebaseUser.email,
+    displayName: firebaseUser.displayName || null,
+    photoURL: firebaseUser.photoURL || null,
+  };
+};
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }, { rejectWithValue }) => {
     try {
       const userCredential = await login(email, password);
-      return userCredential.user;
+      return serializeUser(userCredential.user);
     } catch (err) {
       return rejectWithValue(err.message);
     }
   }
 );
-
 
 export const signupUser = createAsyncThunk(
   "auth/signupUser",
   async ({ email, password }, { rejectWithValue }) => {
     try {
       const userCredential = await signup(email, password);
-      return userCredential.user;
+      return serializeUser(userCredential.user);
     } catch (err) {
       return rejectWithValue(err.message);
     }
   }
 );
-
 
 export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
@@ -49,15 +56,35 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loginUser.pending, (state) => { state.loading = true; state.error = null; })
-      .addCase(loginUser.fulfilled, (state, action) => { state.loading = false; state.user = action.payload; })
-      .addCase(loginUser.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
 
-      .addCase(signupUser.pending, (state) => { state.loading = true; state.error = null; })
-      .addCase(signupUser.fulfilled, (state, action) => { state.loading = false; state.user = action.payload; })
-      .addCase(signupUser.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
+      .addCase(signupUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(signupUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(signupUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
 
-      .addCase(logoutUser.fulfilled, (state) => { state.user = null; });
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.user = null;
+      });
   },
 });
 

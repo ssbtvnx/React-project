@@ -11,9 +11,9 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     setLoadingAuth(true);
 
-    // Подписка на изменения состояния авторизации
+    
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser); // null если нет логина
+      setUser(currentUser); 
       setLoadingAuth(false);
     });
 
@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     await signOut(auth);
-    setUser(null);
+    localStorage.removeItem("localFavorites");
   };
 
   return (

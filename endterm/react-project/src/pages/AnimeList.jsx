@@ -10,9 +10,7 @@ import {
   setLimit,
   setTotalPages,
 } from "../store/animeSlice";
-import { toggleFavorite as toggleFavRedux } from "../store/favoritesSlice";
-import { useAuth } from "../context/AuthContext";
-import { getLocalFavorites, toggleLocalFavorite } from "../services/favoritesService";
+import { useFavorites } from "../context/FavoritesContext"; 
 import "./AnimeList.css";
 
 function useDebounce(value, delay) {
@@ -27,10 +25,12 @@ function useDebounce(value, delay) {
 export default function AnimeList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { user, favorites: authFavorites, addFav, removeFav } = useAuth();
+  const { addFav, removeFav } = useFavorites(); 
 
-  const { search, genre, page, limit, totalPages } = useSelector((state) => state.anime);
-  const guestFavorites = useSelector((state) => state.favorites.items);
+  const { search, genre, page, limit, totalPages } = useSelector(
+    (state) => state.anime
+  );
+  const favorites = useSelector((state) => state.favorites.items); 
 
   const [animes, setAnimes] = useState([]);
   const [genres, setGenres] = useState([]);
@@ -78,32 +78,29 @@ export default function AnimeList() {
     }
   }, [debouncedSearch, genre, page, limit, navigate, dispatch]);
 
-  useEffect(() => { loadGenres(); }, [loadGenres]);
-  useEffect(() => { loadAnimes(); }, [loadAnimes]);
+  useEffect(() => {
+    loadGenres();
+  }, [loadGenres]);
+
+  useEffect(() => {
+    loadAnimes();
+  }, [loadAnimes]);
 
   const clearSearch = () => dispatch(setSearch(""));
 
- 
-  const isFavorite = (anime) => {
-    const id = anime.id || anime.mal_id;
-    if (user) return authFavorites?.some((f) => f.id === id || f.mal_id === id);
-    return guestFavorites?.some((f) => f.mal_id === anime.mal_id);
-  };
+  const isFavorite = (anime) =>
+    favorites.some((f) => f.mal_id === anime.mal_id);
 
- 
   const handleFavoriteToggle = (anime) => {
-    if (user) {
-      isFavorite(anime) ? removeFav(anime.id || anime.mal_id) : addFav(anime);
-    } else {
-      toggleLocalFavorite(anime); // localStorage
-      dispatch(toggleFavRedux(anime)); // redux
-    }
+    isFavorite(anime) ? removeFav(anime.mal_id) : addFav(anime);
   };
 
   return (
     <div className="list-container">
       <div className="top-bar">
-        <button onClick={loadAnimes} className="load-btn">Load Anime</button>
+        <button onClick={loadAnimes} className="load-btn">
+          Load Anime
+        </button>
 
         <div className="search-container">
           <input
@@ -113,7 +110,9 @@ export default function AnimeList() {
             onChange={(e) => dispatch(setSearch(e.target.value))}
           />
           {search && (
-            <button className="clear-btn" onClick={clearSearch}>✕</button>
+            <button className="clear-btn" onClick={clearSearch}>
+              ✕
+            </button>
           )}
         </div>
 
@@ -124,7 +123,9 @@ export default function AnimeList() {
         >
           <option value="">All Genres</option>
           {genres.map((g) => (
-            <option key={g.id} value={g.id}>{g.name}</option>
+            <option key={g.id} value={g.id}>
+              {g.name}
+            </option>
           ))}
         </select>
 
@@ -134,7 +135,9 @@ export default function AnimeList() {
           className="limit-selector"
         >
           {[5, 10, 15, 20].map((n) => (
-            <option key={n} value={n}>{n} per page</option>
+            <option key={n} value={n}>
+              {n} per page
+            </option>
           ))}
         </select>
       </div>
@@ -161,7 +164,9 @@ export default function AnimeList() {
           >
             Prev
           </button>
-          <span>Page {page} / {totalPages}</span>
+          <span>
+            Page {page} / {totalPages}
+          </span>
           <button
             onClick={() => dispatch(setPage(Math.min(page + 1, totalPages)))}
             disabled={page === totalPages}

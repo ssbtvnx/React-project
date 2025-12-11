@@ -2,9 +2,24 @@ const FAVORITES_KEY = "localFavorites";
 
 
 export function getLocalFavorites() {
-  const saved = localStorage.getItem(FAVORITES_KEY);
-  return saved ? JSON.parse(saved) : [];
+  try {
+    const saved = localStorage.getItem(FAVORITES_KEY);
+    return saved ? JSON.parse(saved) : [];
+  } catch (err) {
+    console.error("Failed to parse local favorites:", err);
+    return [];
+  }
 }
+
+
+export function setLocalFavorites(favs) {
+  try {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favs));
+  } catch (err) {
+    console.error("Failed to save local favorites:", err);
+  }
+}
+
 
 export function toggleLocalFavorite(anime) {
   const favs = getLocalFavorites();
@@ -17,6 +32,11 @@ export function toggleLocalFavorite(anime) {
     updated = [...favs, anime];
   }
 
-  localStorage.setItem(FAVORITES_KEY, JSON.stringify(updated));
+  setLocalFavorites(updated);
   return updated;
+}
+
+
+export function clearLocalFavorites() {
+  localStorage.removeItem(FAVORITES_KEY);
 }

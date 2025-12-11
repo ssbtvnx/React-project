@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { signupUser } from "../store/authSlice"; 
+import { signupUser } from "../store/authSlice";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { firestore,  auth } from "../firebase"; 
 import "./LoginSignup.css";
 
 const Signup = () => {
@@ -26,11 +28,22 @@ const Signup = () => {
     }
 
     try {
-      await dispatch(signupUser({ email, password })).unwrap();
-      navigate("/profile");
-    } catch (err) {
-      console.error(err);
-    }
+  
+  const user = await dispatch(signupUser({ email, password })).unwrap();
+  const uid = user?.uid || auth.currentUser.uid; 
+
+  const userRef = doc(firestore, "users", uid);
+  await setDoc(userRef, {
+    email,
+    favorites: [],
+    photoURL: null,
+    createdAt: serverTimestamp(),
+  }, { merge: true });
+
+  navigate("/profile");
+} catch (err) {
+  console.error(err);
+}
   };
 
   return (
